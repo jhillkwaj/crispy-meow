@@ -20,20 +20,21 @@ public class GenerateTrack : MonoBehaviour {
 	
 	public void generateNewTrack() {
 		int random = Random.Range (1, 16);
-		GameObject newTrack = null;/*
+		GameObject newTrack = null;
 		if (random <= 10) {
 			newTrack = Instantiate (Resources.Load ("StraightLine")) as GameObject;
+			newTrack.transform.rotation = Quaternion.Euler(new Vector3(0 , lastEnd.transform.eulerAngles.y, lastEnd.transform.eulerAngles.z));
 		} else if (random <= 14) {
-			newTrack = Instantiate (Resources.Load ("Curve")) as GameObject;
-		} else {
+			newTrack = Instantiate (Resources.Load ("Turn2")) as GameObject;
+			newTrack.transform.rotation = Quaternion.Euler(new Vector3(0 , lastEnd.transform.eulerAngles.y, lastEnd.transform.eulerAngles.z - 90));
+		} else if (random <= 15) {
 			newTrack = Instantiate (Resources.Load ("Turn1")) as GameObject;
-		}*/
-		if (random <= 10) {
-			newTrack = Instantiate (Resources.Load ("StraightLine")) as GameObject;
-		} else {
-			newTrack = Instantiate (Resources.Load ("Turn1")) as GameObject;
-		}
-		newTrack.transform.rotation = Quaternion.Euler(new Vector3(0 , 0, lastEnd.transform.eulerAngles.z));
+			newTrack.transform.rotation = Quaternion.Euler(new Vector3(0 , lastEnd.transform.eulerAngles.y, lastEnd.transform.eulerAngles.z));
+		}// else {
+			//newTrack = Instantiate (Resources.Load ("Turn1")) as GameObject;
+		//}
+
+
 		newTrack.transform.position = new Vector3(lastEnd.transform.position.x + (newTrack.transform.position.x - newTrack.GetComponent<Movement> ().start.transform.position.x),
 		                                          lastEnd.transform.position.y + (newTrack.transform.position.y - newTrack.GetComponent<Movement> ().start.transform.position.y), 0 );
 		lastEnd = newTrack.GetComponent<Movement> ().end;
