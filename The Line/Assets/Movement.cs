@@ -8,5 +8,5 @@ public class Movement : MonoBehaviour {
 
 	public GameObject[] movePoints;
 
-	public bool curve;
+	public int curve;
 }

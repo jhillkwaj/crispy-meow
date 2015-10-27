@@ -16,6 +16,8 @@ public class MovePlayer : MonoBehaviour {
 	double score = 0;
 	public GameObject scoreObject;
 
+	int curve = 0;
+
 	// Use this for initialization
 	void Start () {
 		generateTrack = generateTrackObj.GetComponent<GenerateTrack> ();
@@ -32,23 +34,52 @@ public class MovePlayer : MonoBehaviour {
 
 		int overCount = 100;
 		while (moveSpeed > 0 && overCount > 0) {
-			Debug.Log(""+((GameObject)points [0]).transform.position);
+
 			overCount--;
 
-			float distance = Vector3.Distance (this.transform.position, ((GameObject)points[0]).transform.position);
-
-			this.transform.position = Vector3.MoveTowards (this.transform.position, ((GameObject)points [0]).transform.position, moveSpeed);
-			this.transform.rotation = ((GameObject)points [0]).transform.rotation;
-
-			moveSpeed -= distance;
-			//Debug.Log(moveSpeed);
-
-			if(moveSpeed>=0)
+			if(curve == 0)
 			{
-				points.RemoveAt(0);
-				if(points.Count<=0)
-					getNextTrack();
+				float distance = Vector3.Distance (this.transform.position, ((GameObject)points[0]).transform.position);
+
+				this.transform.position = Vector3.MoveTowards (this.transform.position, ((GameObject)points [0]).transform.position, moveSpeed);
+				this.transform.rotation = ((GameObject)points [0]).transform.rotation;
+
+				moveSpeed -= distance;
+				//Debug.Log(moveSpeed);
+
+				if(moveSpeed>=0)
+				{
+					points.RemoveAt(0);
+					if(points.Count<=0)
+						getNextTrack();
+				}
 			}
+			else {
+				Vector3 center = ((GameObject)points [1]).transform.position;
+				float radius = Vector3.Distance(center, ((GameObject)points [0]).transform.position);
+				float moveAngle = moveSpeed  / radius;
+				if(Vector3.Distance(this.transform.position, ((GameObject)points [2]).transform.position) < moveSpeed)
+				{
+					//move to the end, subtract distance, and gen new track
+					this.transform.position = ((GameObject)points [2]).transform.position;
+
+					points.RemoveAt(0);
+					points.RemoveAt(0);
+					points.RemoveAt(0);
+
+					getNextTrack();
+
+					moveSpeed -= Vector3.Distance(this.transform.position, ((GameObject)points [2]).transform.position);
+				} else {
+					if(curve == 1)
+						this.transform.RotateAround(center,-this.transform.forward,Mathf.Rad2Deg * moveAngle);
+					else
+						this.transform.RotateAround(center,-this.transform.forward,Mathf.Rad2Deg * -moveAngle);
+					moveSpeed = 0;
+				}
+			}
+
+			
 
 		}
 		if (overCount == 0) {
@@ -61,7 +92,7 @@ public class MovePlayer : MonoBehaviour {
 	{
 		score++;
 		scoreObject.GetComponent<Text> ().text = "Score " + score;
-		if (score % 12 == 9) {
+		if (score % 4 == 3) {
 			speed+=.4f;
 		}
 
@@ -70,5 +101,6 @@ public class MovePlayer : MonoBehaviour {
 		for(int i = 0; i < trackOn.GetComponent<Movement> ().movePoints.Length; i++)
 			points.Add(trackOn.GetComponent<Movement> ().movePoints[i]);
 		generateTrack.generateNewTrack ();
+		curve = trackOn.GetComponent<Movement> ().curve;
 	}
 }

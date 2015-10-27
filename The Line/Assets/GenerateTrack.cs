@@ -27,7 +27,11 @@ public class GenerateTrack : MonoBehaviour {
 		} else if (random <= 12) {
 			newTrack = Instantiate (Resources.Load ("Curve")) as GameObject;
 			newTrack.transform.rotation = Quaternion.Euler(new Vector3(0 , lastEnd.transform.eulerAngles.y, lastEnd.transform.eulerAngles.z));
-		} else if (random <= 14) {
+		} else if (random <= 13) {
+			newTrack = Instantiate (Resources.Load ("Curve2")) as GameObject;
+			newTrack.transform.rotation = Quaternion.Euler(new Vector3(0 , lastEnd.transform.eulerAngles.y, lastEnd.transform.eulerAngles.z - 90));
+		}
+		else if (random <= 14) {
 			newTrack = Instantiate (Resources.Load ("Turn1")) as GameObject;
 			newTrack.transform.rotation = Quaternion.Euler(new Vector3(0 , lastEnd.transform.eulerAngles.y, lastEnd.transform.eulerAngles.z));
 		} else {
